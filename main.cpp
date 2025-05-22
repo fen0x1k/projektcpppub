@@ -14,14 +14,13 @@ int main() {
         cout << "1. Dodaj samochod\n";
         cout << "2. Dodaj samochody z pliku\n";
         cout << "3. Wyswietl wszystkie samochody\n";
-        cout << "4. Wyswietl samochody (filtrowanie)\n";
-        cout << "5. Wyswietl wszystkie samochody (sortowanie)\n";
-        cout << "6. Edytuj samochod\n";
-        cout << "7. Usun samochod\n";
-        cout << "8. Posortuj dane samochodow\n";
-        cout << "9. Generuj statystyki\n";
-        cout << "10. Zapisz baze do pliku\n";
-        cout << "11. Wczytaj baze z pliku\n";
+        cout << "4. Wyswietl wszystkie samochody (sortowanie)\n";
+        cout << "5. Edytuj samochod\n";
+        cout << "6. Usun samochod\n";
+        cout << "7. Posortuj dane samochodow\n";
+        cout << "8. Generuj statystyki\n";
+        cout << "9. Zapisz baze do pliku\n";
+        cout << "10. Wczytaj baze z pliku\n";
         cout << "0. Wyjscie\n";
         cout << "Wybierz opcje: ";
         cin >> wybor;
@@ -42,12 +41,9 @@ int main() {
             baza.wyswietlWszystkie();
             break;
         case 4:
-            baza.wyswietlSamochodyFiltrowanie();
-            break;
-        case 5:
             baza.wyswietlWszystkieSortowanie();
             break;
-        case 6: {
+        case 5: {
             if (baza.iloscSamochodow() == 0) {
                 cout << "Brak samochodow w bazie do edycji.\n";
             }
@@ -62,7 +58,7 @@ int main() {
             }
             break;
         }
-        case 7: {
+        case 6: {
             if (baza.iloscSamochodow() == 0) {
                 cout << "Brak samochodow w bazie do usuniecia.\n";
             }
@@ -78,13 +74,13 @@ int main() {
             break;
         }
 
-        case 8:
+        case 7:
             baza.posortujBaze();
             break;
-        case 9:
+        case 8:
             baza.generujStatystyki();
             break;
-        case 10: {
+        case 9: {
             cout << "Podaj nazwe pliku (lub wpisz 'domyslna'): ";
             string nazwaPliku;
             cin >> nazwaPliku;
@@ -92,7 +88,7 @@ int main() {
             baza.zapiszDoPliku(nazwaPliku);
             break;
         }
-        case 11: {
+        case 10: {
             cout << "Podaj nazwe pliku (lub wpisz 'domyslna'): ";
             string nazwaPliku;
             cin >> nazwaPliku;

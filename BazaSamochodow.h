@@ -13,11 +13,11 @@ public:
     void usunSamochod(int indeks);
     void wyswietlWszystkie() const;
     void wyswietlWszystkieSortowanie() const;
-    void wyswietlSamochodyFiltrowanie() const;
     void posortujBaze();
     void zapiszDoPliku(const string& nazwaPliku) const;
     void wczytajZPliku(const string& nazwaPliku, bool dodaj = false);
     void generujStatystyki() const;
+    void generujStatystyke(const string& pole, const string& typ) const;
     int iloscSamochodow() const;
 
     void wyswietlNaglowek() const;
@@ -25,13 +25,6 @@ public:
 
     int wczytajInt() const;
     double wczytajDouble() const;
-    char wczytajZnak() const;
 private:
-    void generujSredniaCene() const;
-    void generujNajtanszySamochod() const;
-    void generujNajdrozszySamochod() const;
-    void generujMedianePrzebiegu() const;
-    void generujOdchylenieStandardoweCen() const;
-    void generujWszystkieStatystyki() const;
     void sortujPoWybranymKryterium(vector<Samochod>& bazaDoSortowania) const;
 };

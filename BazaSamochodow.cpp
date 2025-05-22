@@ -53,82 +53,69 @@ void BazaSamochodow::dodajSamochod() {
 }
 
 void BazaSamochodow::edytujSamochod(int indeks) {
-    if (indeks >= 0 && indeks < samochody.size()) {
-        cout << "\n=== Edycja samochodu ===\n";
-        wyswietlNaglowek();
-        wyswietlSamochod(indeks, samochody[indeks]);
-
-        cout << "\nCo chcesz edytowac?\n";
-        cout << "1. Marka\n";
-        cout << "2. Model\n";
-        cout << "3. Rocznik\n";
-        cout << "4. Przebieg\n";
-        cout << "5. Cena\n";
-        cout << "0. Anuluj\n";
-        cout << "Twoj wybor: ";
-        int wybor = wczytajInt();
-
-        switch (wybor) {
-        case 1: {
-            cout << "Podaj nowa marke: ";
-            string nowaMarka;
-            cin >> nowaMarka;
-            samochody[indeks].ustawMarke(nowaMarka);
-            cout << "Marka zostala zmieniona.\n";
-            break;
-        }
-        case 2: {
-            cout << "Podaj nowy model: ";
-            string nowyModel;
-            cin >> nowyModel;
-            samochody[indeks].ustawModel(nowyModel);
-            cout << "Model zostal zmieniony.\n";
-            break;
-        }
-        case 3: {
-            cout << "Podaj nowy rocznik: ";
-            int nowyRocznik = wczytajInt();
-            if (nowyRocznik < 0) {
-                cout << "Nieprawidlowy rocznik. Operacja anulowana.\n";
-                return;
-            }
-            samochody[indeks].ustawRocznik(nowyRocznik);
-            cout << "Rocznik zostal zmieniony.\n";
-            break;
-        }
-        case 4: {
-            cout << "Podaj nowy przebieg (w km): ";
-            int nowyPrzebieg = wczytajInt();
-            if (nowyPrzebieg < 0) {
-                cout << "Nieprawidlowy przebieg. Operacja anulowana.\n";
-                return;
-            }
-            samochody[indeks].ustawPrzebieg(nowyPrzebieg);
-            cout << "Przebieg zostal zmieniony.\n";
-            break;
-        }
-        case 5: {
-            cout << "Podaj nowa cene (PLN): ";
-            double nowaCena = wczytajDouble();
-            if (nowaCena < 0) {
-                cout << "Nieprawidlowa cena. Operacja anulowana.\n";
-                return;
-            }
-            samochody[indeks].ustawCene(nowaCena);
-            cout << "Cena zostala zmieniona.\n";
-            break;
-        }
-        case 0:
-            cout << "Edycja anulowana.\n";
-            break;
-        default:
-            cout << "Nieprawidlowy wybor.\n";
-            break;
-        }
-    }
-    else {
+    if (indeks < 0 || indeks >= samochody.size()) {
         cout << "Nieprawidlowy indeks samochodu.\n";
+        return;
     }
+
+    cout << "\n=== Edycja samochodu ===\n";
+    wyswietlNaglowek();
+    wyswietlSamochod(indeks, samochody[indeks]);
+    cout << "Wpisz nowa wartosc lub '-' aby pozostawic bez zmian.\n";
+
+    string input;
+
+    cout << "Nowa marka: ";
+    cin >> input;
+    if (input != "-") samochody[indeks].ustawMarke(input);
+
+    cout << "Nowy model: ";
+    cin >> input;
+    if (input != "-") samochody[indeks].ustawModel(input);
+
+    while (true) {
+        cout << "Nowy rocznik: ";
+        cin >> input;
+        if (input == "-") break;
+        try {
+            int rocznik = stoi(input);
+            samochody[indeks].ustawRocznik(rocznik);
+            break;
+        }
+        catch (...) {
+            cout << "Niepoprawny rocznik. Sprobuj ponownie lub wpisz '-' aby pominac.\n";
+        }
+    }
+
+    while (true) {
+        cout << "Nowy przebieg (km): ";
+        cin >> input;
+        if (input == "-") break;
+        try {
+            int przebieg = stoi(input);
+            samochody[indeks].ustawPrzebieg(przebieg);
+            break;
+        }
+        catch (...) {
+            cout << "Niepoprawny przebieg. Sprobuj ponownie lub wpisz '-' aby pominac.\n";
+        }
+    }
+
+    while (true) {
+        cout << "Nowa cena (PLN): ";
+        cin >> input;
+        if (input == "-") break;
+        try {
+            double cena = stod(input);
+            samochody[indeks].ustawCene(cena);
+            break;
+        }
+        catch (...) {
+            cout << "Niepoprawna cena. Sprobuj ponownie lub wpisz '-' aby pominac.\n";
+        }
+    }
+
+    cout << "Dane zostaly zaktualizowane.\n";
 }
 
 void BazaSamochodow::usunSamochod(int indeks) {
@@ -193,121 +180,6 @@ void BazaSamochodow::wyswietlWszystkieSortowanie() const {
     wyswietlNaglowek();
     for (size_t i = 0; i < kopia.size(); ++i) {
         wyswietlSamochod(i, kopia[i]);
-    }
-}
-void BazaSamochodow::wyswietlSamochodyFiltrowanie() const {
-    if (samochody.empty()) {
-        cout << "Brak samochodow w bazie.\n";
-        return;
-    }
-
-    cout << "\n=== Filtrowanie wielokryterialne ===\n";
-
-    bool filtrMarka = false, filtrPrzebieg = false, filtrCena = false, filtrRocznik = false;
-    char wybor;
-
-    cout << "Filtrowac po marce? (T/N): ";
-    wybor = wczytajZnak();
-    if (wybor == 'T') filtrMarka = true;
-
-    cout << "Filtrowac po przebiegu? (T/N): ";
-    wybor = wczytajZnak();
-    if (wybor == 'T') filtrPrzebieg = true;
-
-    cout << "Filtrowac po cenie? (T/N): ";
-    wybor = wczytajZnak();
-    if (wybor == 'T') filtrCena = true;
-
-    cout << "Filtrowac po roczniku? (T/N): ";
-    wybor = wczytajZnak();
-    if (wybor == 'T') filtrRocznik = true;
-
-    string litera;
-    int przebiegOd = 0, przebiegDo = INT_MAX;
-    double cenaOd = 0, cenaDo = 1e9;
-    int rocznikOd = 0, rocznikDo = 9999;
-
-    if (filtrMarka) {
-        cout << "Podaj litere, od ktorej zaczyna sie marka: ";
-        litera = wczytajZnak();
-    }
-    if (filtrPrzebieg) {
-        cout << "Podaj minimalny przebieg (km): ";
-        przebiegOd = wczytajInt();
-        cout << "Podaj maksymalny przebieg (km): ";
-        przebiegDo = wczytajInt();
-        if (przebiegOd < 0 || przebiegDo < 0 || przebiegOd > przebiegDo) {
-            cout << "Nieprawidlowe dane przebiegu. Anulowanie filtrowania.\n";
-            return;
-        }
-    }
-    if (filtrCena) {
-        cout << "Podaj minimalna cene (PLN): ";
-        cenaOd = wczytajDouble();
-        cout << "Podaj maksymalna cene (PLN): ";
-        cenaDo = wczytajDouble();
-        if (cenaOd < 0 || cenaDo < 0 || cenaOd > cenaDo) {
-            cout << "Nieprawidlowe dane ceny. Anulowanie filtrowania.\n";
-            return;
-        }
-    }
-    if (filtrRocznik) {
-        cout << "Podaj minimalny rocznik: ";
-        rocznikOd = wczytajInt();
-        cout << "Podaj maksymalny rocznik: ";
-        rocznikDo = wczytajInt();
-        if (rocznikOd < 0 || rocznikDo < 0 || rocznikOd > rocznikDo) {
-            cout << "Nieprawidlowe dane rocznika. Anulowanie filtrowania.\n";
-            return;
-        }
-    }
-
-    vector<Samochod> filtr;
-
-    for (const auto& s : samochody) {
-        bool pasuje = true;
-
-        if (filtrMarka && toupper(s.pobierzMarke()[0]) != toupper(litera[0]))
-            pasuje = false;
-        if (filtrPrzebieg && !(s.pobierzPrzebieg() >= przebiegOd && s.pobierzPrzebieg() <= przebiegDo))
-            pasuje = false;
-        if (filtrCena && !(s.pobierzCene() >= cenaOd && s.pobierzCene() <= cenaDo))
-            pasuje = false;
-        if (filtrRocznik && !(s.pobierzRocznik() >= rocznikOd && s.pobierzRocznik() <= rocznikDo))
-            pasuje = false;
-
-        if (pasuje)
-            filtr.push_back(s);
-    }
-
-    if (filtr.empty()) {
-        cout << "Brak samochodow spelniajacych wszystkie kryteria.\n";
-    }
-    else {
-        wyswietlNaglowek();
-        for (size_t i = 0; i < filtr.size(); ++i) {
-            wyswietlSamochod(i, filtr[i]);
-        }
-
-        cout << "\nCzy chcesz zapisac wyniki do pliku? (T/N): ";
-        char decyzja = wczytajZnak();
-        if (decyzja == 'T') {
-            cout << "Podaj nazwe pliku: ";
-            string nazwaPliku;
-            cin >> nazwaPliku;
-            ofstream plik(nazwaPliku);
-            if (plik.is_open()) {
-                for (const auto& s : filtr) {
-                    plik << s.pobierzMarke() << ";" << s.pobierzModel() << ";"
-                        << s.pobierzRocznik() << ";" << s.pobierzPrzebieg() << ";"
-                        << s.pobierzCene() << endl;
-                }
-                cout << "Wyniki zapisane do pliku.\n";
-            }
-            else {
-                cout << "Nie udalo sie otworzyc pliku do zapisu.\n";
-            }
-        }
     }
 }
 
@@ -379,97 +251,87 @@ void BazaSamochodow::generujStatystyki() const {
         return;
     }
 
-    int wybor;
-    do {
-        cout << "\n=== Generowanie statystyk ===\n";
-        cout << "1. Srednia cena\n";
-        cout << "2. Najtanszy samochod\n";
-        cout << "3. Najdrozszy samochod\n";
-        cout << "4. Mediana przebiegu\n";
-        cout << "5. Odchylenie standardowe cen\n";
-        cout << "6. Wszystkie statystyki\n";
-        cout << "0. Powrot do menu glownego\n";
-        cout << "Twoj wybor: ";
-        wybor = wczytajInt();
+    cout << "\n=== Generowanie statystyk ===\n";
+    cout << "Wybierz pole:\n";
+    cout << "1. Cena\n";
+    cout << "2. Przebieg\n";
+    cout << "Twoj wybor: ";
+    int poleWybor = wczytajInt();
+    string pole = (poleWybor == 1) ? "cena" : "przebieg";
 
-        switch (wybor) {
-        case 1: generujSredniaCene(); break;
-        case 2: generujNajtanszySamochod(); break;
-        case 3: generujNajdrozszySamochod(); break;
-        case 4: generujMedianePrzebiegu(); break;
-        case 5: generujOdchylenieStandardoweCen(); break;
-        case 6: generujWszystkieStatystyki(); break;
-        case 0: cout << "Powrot do menu glownego.\n"; break;
-        default: cout << "Nieprawidlowy wybor.\n"; break;
+    cout << "\nWybierz statystyke:\n";
+    cout << "1. Minimum\n";
+    cout << "2. Maksimum\n";
+    cout << "3. Mediana\n";
+    cout << "4. Odchylenie standardowe\n";
+    cout << "Twoj wybor: ";
+    int typWybor = wczytajInt();
+
+    switch (typWybor) {
+    case 1: generujStatystyke(pole, "min"); break;
+    case 2: generujStatystyke(pole, "max"); break;
+    case 3: generujStatystyke(pole, "mediana"); break;
+    case 4: generujStatystyke(pole, "odchylenie"); break;
+    default: cout << "Nieprawidlowy wybor.\n"; break;
+    }
+}
+
+void BazaSamochodow::generujStatystyke(const string& pole, const string& typ) const {
+    if (samochody.empty()) {
+        cout << "Brak danych do analizy.\n";
+        return;
+    }
+
+    if (typ == "min" || typ == "max") {
+        auto comparator = [&](const Samochod& a, const Samochod& b) {
+            double valA = (pole == "cena") ? a.pobierzCene() : a.pobierzPrzebieg();
+            double valB = (pole == "cena") ? b.pobierzCene() : b.pobierzPrzebieg();
+            return valA < valB;
+            };
+
+        auto it = (typ == "min")
+            ? min_element(samochody.begin(), samochody.end(), comparator)
+            : max_element(samochody.begin(), samochody.end(), comparator);
+
+        int indeks = distance(samochody.begin(), it);
+
+        cout << "\n" << (typ == "min" ? "Minimum" : "Maksimum") << " dla pola " << pole << ":\n";
+        wyswietlNaglowek();
+        wyswietlSamochod(indeks, *it);
+    }
+    else if (typ == "mediana") {
+        vector<double> dane;
+        for (const auto& s : samochody) {
+            dane.push_back(pole == "cena" ? s.pobierzCene() : s.pobierzPrzebieg());
         }
-    } while (wybor != 0);
-}
+        sort(dane.begin(), dane.end());
+        double mediana;
+        if (dane.size() % 2 == 0)
+            mediana = (dane[dane.size() / 2 - 1] + dane[dane.size() / 2]) / 2.0;
+        else
+            mediana = dane[dane.size() / 2];
 
-void BazaSamochodow::generujSredniaCene() const {
-    double suma = 0;
-    for (const auto& samochod : samochody) {
-        suma += samochod.pobierzCene();
+        cout << "Mediana dla pola " << pole << ": " << fixed << setprecision(2) << mediana << endl;
     }
-    cout << fixed << setprecision(2);
-    cout << "Srednia cena: " << suma / samochody.size() << " PLN\n";
-}
+    else if (typ == "odchylenie") {
+        vector<double> dane;
+        for (const auto& s : samochody) {
+            dane.push_back(pole == "cena" ? s.pobierzCene() : s.pobierzPrzebieg());
+        }
+        double suma = accumulate(dane.begin(), dane.end(), 0.0);
+        double srednia = suma / dane.size();
+        double suma_kwadratow = 0.0;
+        for (double x : dane)
+            suma_kwadratow += (x - srednia) * (x - srednia);
+        double odchylenie = sqrt(suma_kwadratow / dane.size());
 
-void BazaSamochodow::generujNajtanszySamochod() const {
-    auto it = min_element(samochody.begin(), samochody.end(), [](const Samochod& a, const Samochod& b) {
-        return a.pobierzCene() < b.pobierzCene();
-        });
-    cout << fixed << setprecision(2);
-    cout << "Najtanszy samochod: " << it->pobierzMarke() << " " << it->pobierzModel() << " (" << it->pobierzCene() << " PLN)\n";
-}
-
-void BazaSamochodow::generujNajdrozszySamochod() const {
-    auto it = max_element(samochody.begin(), samochody.end(), [](const Samochod& a, const Samochod& b) {
-        return a.pobierzCene() < b.pobierzCene();
-        });
-    cout << fixed << setprecision(2);
-    cout << "Najdrozszy samochod: " << it->pobierzMarke() << " " << it->pobierzModel() << " (" << it->pobierzCene() << " PLN)\n";
-}
-
-void BazaSamochodow::generujMedianePrzebiegu() const {
-    vector<int> przebiegi;
-    for (const auto& samochod : samochody) {
-        przebiegi.push_back(samochod.pobierzPrzebieg());
-    }
-    sort(przebiegi.begin(), przebiegi.end());
-    double mediana;
-    if (przebiegi.size() % 2 == 0) {
-        mediana = (przebiegi[przebiegi.size() / 2 - 1] + przebiegi[przebiegi.size() / 2]) / 2.0;
+        cout << "Odchylenie standardowe dla pola " << pole << ": " << fixed << setprecision(2) << odchylenie << endl;
     }
     else {
-        mediana = przebiegi[przebiegi.size() / 2];
+        cout << "Nieznany typ statystyki.\n";
     }
-    cout << fixed << setprecision(2);
-    cout << "Mediana przebiegu: " << mediana << " km\n";
 }
 
-void BazaSamochodow::generujOdchylenieStandardoweCen() const {
-    double suma = 0;
-    vector<double> ceny;
-    for (const auto& samochod : samochody) {
-        suma += samochod.pobierzCene();
-        ceny.push_back(samochod.pobierzCene());
-    }
-    double srednia = suma / ceny.size();
-    double sumaOdchylen = 0;
-    for (double cena : ceny) {
-        sumaOdchylen += (cena - srednia) * (cena - srednia);
-    }
-    cout << fixed << setprecision(2);
-    cout << "Odchylenie standardowe cen: " << sqrt(sumaOdchylen / ceny.size()) << " PLN\n";
-}
-
-void BazaSamochodow::generujWszystkieStatystyki() const {
-    generujSredniaCene();
-    generujNajtanszySamochod();
-    generujNajdrozszySamochod();
-    generujMedianePrzebiegu();
-    generujOdchylenieStandardoweCen();
-}
 
 void BazaSamochodow::sortujPoWybranymKryterium(vector<Samochod>& bazaDoSortowania) const {
     int wybor;
@@ -547,15 +409,4 @@ double BazaSamochodow::wczytajDouble() const {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
     return wartosc;
-}
-
-char BazaSamochodow::wczytajZnak() const {
-    string input;
-    while (true) {
-        cin >> input;
-        if (input.length() == 1) {
-            return toupper(input[0]);
-        }
-        cout << "Blad! Podaj pojedynczy znak: ";
-    }
 }

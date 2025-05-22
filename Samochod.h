@@ -1,7 +1,4 @@
 #pragma once
-#ifndef SAMOCHOD_H
-#define SAMOCHOD_H
-
 #include <string>
 using namespace std;
 
@@ -31,5 +28,3 @@ public:
 
     void wyswietl() const;
 };
-
-#endif
